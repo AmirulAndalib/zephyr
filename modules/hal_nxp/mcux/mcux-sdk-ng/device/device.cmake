@@ -36,17 +36,23 @@ if(CONFIG_SOC_SERIES_IMXRT10XX OR CONFIG_SOC_SERIES_IMXRT11XX)
   set(CONFIG_MCUX_COMPONENT_device.boot_header ON)
 endif()
 
-set(CONFIG_MCUX_COMPONENT_device.system ON)
+if(NOT CONFIG_SOC_MIMX94398_M33)
+  set(CONFIG_MCUX_COMPONENT_device.system ON)
+endif()
 set(CONFIG_MCUX_COMPONENT_device.CMSIS ON)
-set(CONFIG_MCUX_COMPONENT_driver.clock ON)
+if(NOT CONFIG_CLOCK_CONTROL_ARM_SCMI)
+  set(CONFIG_MCUX_COMPONENT_driver.clock ON)
+endif()
 
 # Exclude fsl_power.c for DSP domains
-if(CONFIG_ARM)
+if((CONFIG_ARM) AND (NOT CONFIG_CLOCK_CONTROL_ARM_SCMI))
   set(CONFIG_MCUX_COMPONENT_driver.power ON)
 endif()
 
-set(CONFIG_MCUX_COMPONENT_driver.reset ON)
-set(CONFIG_MCUX_COMPONENT_driver.memory ON)
+if(NOT CONFIG_CPU_CORTEX_A)
+  set(CONFIG_MCUX_COMPONENT_driver.reset ON)
+  set(CONFIG_MCUX_COMPONENT_driver.memory ON)
+endif()
 
 # Include fsl_dsp.c for ARM domains (applicable to i.MX RTxxx devices)
 if(CONFIG_ARM)
